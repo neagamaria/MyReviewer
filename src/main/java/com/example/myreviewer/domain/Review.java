@@ -2,8 +2,9 @@ package com.example.myreviewer.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -12,9 +13,10 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String feedback;
-    private Integer grade;
+    private Float grade;
+    private LocalDateTime postedDate;
     @ManyToOne
-    private User reviewer;
+    private Account reviewer;
     @ManyToOne
     private Article article;
 }

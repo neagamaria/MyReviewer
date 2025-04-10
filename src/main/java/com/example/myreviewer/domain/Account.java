@@ -2,13 +2,12 @@ package com.example.myreviewer.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.w3c.dom.Text;
 
 import java.util.List;
 
 @Data
 @Entity
-public class User {
+public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

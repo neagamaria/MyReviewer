@@ -2,8 +2,9 @@ package com.example.myreviewer.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.w3c.dom.Text;
+
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -13,7 +14,7 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
-    private LocalDateTime postedDate;
+    private Date postedDate;
     private String description;
     private String visibility;
 
@@ -21,12 +22,15 @@ public class Article {
     private String document;
 
     @ManyToOne
-    private User writer;
+    private Account writer;
 
     @OneToMany(mappedBy="article")
     private List<Review> reviews;
 
     @ManyToMany(mappedBy="articles")
     private List<Domain> domains;
+
+    @Enumerated(value = EnumType.STRING)
+    private Level level;
 
 }
