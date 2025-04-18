@@ -1,44 +1,59 @@
-DROP TABLE IF EXISTS article_domain;
-DROP TABLE IF EXISTS level;
-DROP TABLE IF EXISTS review;
-DROP TABLE IF EXISTS account;
-DROP TABLE IF EXISTS article;
-DROP TABLE IF EXISTS domain;
+drop table if exists article_domain;
+drop table if exists review;
+drop table if exists article;
+drop table if exists level;
+drop table if exists domain;
+drop table if exists account;
 
 
 
-CREATE TABLE domain
+
+create table domain
 (
-    id   BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50)
+    id   bigint auto_increment primary key,
+    name varchar(50)
 );
 
-CREATE TABLE account
+create table account
 (
-    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name        VARCHAR(100),
-    email       VARCHAR(50),
-    role        VARCHAR(10),
-    description VARCHAR(100)
+    id          bigint auto_increment primary key,
+    name        varchar(100),
+    email       varchar(50),
+    role        varchar(10),
+    description varchar(100)
 );
 
-CREATE TABLE article
+create table article
 (
-    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name        VARCHAR(50),
-    posted_date DATE,
-    description VARCHAR(100),
-    visibility  VARCHAR(10),
-    document    VARCHAR(100),
-    writer_id   BIGINT
+    id          bigint auto_increment primary key,
+    name        varchar(50),
+    posted_date date,
+    description varchar(100),
+    visibility  varchar(10),
+    document    varchar(100),
+    writer_id   bigint
 );
 
-CREATE TABLE review
+create table review
 (
-    id         BIGINT AUTO_INCREMENT PRIMARY KEY,
-    feedback   VARCHAR(500),
-    grade      FLOAT,
-    user_id    BIGINT,
-    article_id BIGINT
+    id         bigint auto_increment primary key,
+    feedback   varchar(500),
+    grade      float,
+    reviewer_id    bigint,
+    article_id bigint
 );
 
+alter table article add foreign key (writer_id) references account(id);
+
+alter table review add foreign key (reviewer_id) references account(id);
+
+alter table review add foreign key (article_id) references article(id);
+
+
+create table article_domain (
+        article_id bigint,
+        domain_id bigint,
+        foreign key (article_id) references article(id),
+        foreign key (domain_id) references domain(id),
+        primary key (article_id, domain_id)
+);
