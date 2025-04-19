@@ -1,0 +1,10 @@
+<tr th:each="article, stat : ${articles}"
+    th:class="${stat.odd}? 'table-light':''">
+    <td th:text="${article.id}">1</td>
+    <td th:text="${article.name}">Article 1</td>
+    <td th:text="${article.posteddate}">Posted date</td>
+    <td th:text="${article.description}">Description</td>
+    <td th:text="${article.level}">Level</td>
+    <td><a href="#" th:href="@{'/products/edit/' + ${article.id}}"><i class="fa-solid fa-pen"></i></a></td>
+    <td><a href="#" th:href="@{'/products/delete/' + ${article.id}}"><i class="fa-solid fa-trash"></i></a></td>
+</tr>
