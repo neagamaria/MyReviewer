@@ -5,10 +5,17 @@ import com.awbd.myreviewer.dtos.ArticleDTO;
 import com.awbd.myreviewer.repositories.ArticleRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,7 +35,19 @@ public class ArticleServiceImpl implements ArticleService {
         articleRepository.findAll().iterator().forEachRemaining(articles::add);
 
         return articles.stream()
-                .map(product -> modelMapper.map(product, ArticleDTO.class))
+                .map(article -> modelMapper.map(article, ArticleDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ArticleDTO> findAllPublic() {
+        Optional<Article> publicArticles = articleRepository.getALLPublic();
+
+        if(publicArticles.isEmpty()) {
+            throw new RuntimeException("Article not found!");
+        }
+        return publicArticles.stream()
+                .map(article -> modelMapper.map(article, ArticleDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -54,6 +73,26 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public void deleteById(Long id) {
         articleRepository.deleteById(id);
+    }
+
+
+    @Override
+    public void uploadDocument(ArticleDTO articleDTO, MultipartFile file) {
+        Article article = modelMapper.map(articleDTO, Article.class);
+        String uploadPath = "";
+
+        try {
+            if(!file.isEmpty()) {
+                String fileName = UUID.randomUUID() + file.getOriginalFilename();
+                Path filePath = Paths.get(uploadPath, fileName);
+                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+                article.setDocument(fileName);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }

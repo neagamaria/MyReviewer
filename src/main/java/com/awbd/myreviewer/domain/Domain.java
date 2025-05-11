@@ -12,6 +12,7 @@ public class Domain {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private String image;
 
     @ManyToMany
     @JoinTable(name = "article_domain",

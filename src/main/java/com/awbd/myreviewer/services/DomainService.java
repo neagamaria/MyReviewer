@@ -9,6 +9,7 @@ import java.util.List;
 public interface DomainService {
     List<DomainDTO> findAll();
     DomainDTO findById(Long id);
+    List<DomainDTO> findByIds(List<Long> ids);
     DomainDTO save(DomainDTO domain);
     void deleteById(Long id);
 }

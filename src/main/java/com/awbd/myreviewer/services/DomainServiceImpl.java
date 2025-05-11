@@ -5,6 +5,8 @@ import com.awbd.myreviewer.dtos.DomainDTO;
 import com.awbd.myreviewer.mappers.DomainMapper;
 import com.awbd.myreviewer.repositories.DomainRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import java.util.List;
@@ -17,8 +19,8 @@ public class DomainServiceImpl implements DomainService{
     private DomainRepository domainRepository;
     private DomainMapper domainMapper;
 
-    DomainServiceImpl(DomainRepository categoryRepository, DomainMapper domainMapper){
-        this.domainRepository = categoryRepository;
+    DomainServiceImpl(DomainRepository domainRepository, DomainMapper domainMapper){
+        this.domainRepository = domainRepository;
         this.domainMapper = domainMapper;
     }
 
@@ -27,9 +29,14 @@ public class DomainServiceImpl implements DomainService{
         List<Domain> domains = new LinkedList<>();
         domainRepository.findAll().iterator().forEachRemaining(domains::add);
 
-        return domains.stream()
-                .map(domainMapper::toDto)
-                .collect(Collectors.toList());
+        return domains.stream().map(domainMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DomainDTO> findByIds(List<Long> ids) {
+        List<Domain> domains = domainRepository.findByIdIn(ids);
+
+        return domains.stream().map(domain -> new DomainDTO(domain.getId(), domain.getName())).collect(Collectors.toList());
     }
 
     @Override

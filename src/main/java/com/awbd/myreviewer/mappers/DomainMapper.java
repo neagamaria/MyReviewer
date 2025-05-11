@@ -9,6 +9,7 @@ public class DomainMapper {
     public DomainDTO toDto(Domain domain) {
         Long id = domain.getId();
         String name = domain.getName();
+        String image = domain.getImage();
 
         return new DomainDTO(id, name);
     }
@@ -17,6 +18,7 @@ public class DomainMapper {
         Domain domain = new Domain();
         domain.setId(domainDTO.getId());
         domain.setName(domainDTO.getName());
+      //  domain.setImage(domainDTO.getImage());
 
         return domain;
     }

@@ -13,7 +13,7 @@
 <body>
 <div class="container-colored">
     <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="nav-link" th:href="@{'/'}"> <img src="/logo.png" style="width: 30%; height: auto">  </a>
+        <a class="nav-link" th:href="@{'/'}"> <img src="/logo.png" style="width: 40%; height: auto">  </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -26,23 +26,40 @@
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{'/domains'}">Domains</a>
                 </li>
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link btn-primary" th:href="@{'/product/form'}">-->
-<!--                        <i class="fas fa-plus-circle"></i> Sell-->
-<!--                    </a>-->
-<!--                </li>-->
+                <li class="nav-item" th:if="${currentRole == 'ROLE_ADMIN' || currentRole == 'ROLE_WRITER'}">
+                    <a class="nav-link btn-primary" th:href="@{'/articles/form'}">
+                        <i class="fas fa-plus-circle"></i>Post
+                    </a>
+                </li>
             </ul>
             <ul class="navbar-nav ms-auto topnav">
-                <li class="nav-item">
-                    <a class="nav-link btn-primary user-button" th:href="@{'/login'}">
-                        <i class="fas fa-sign-in-alt"></i> Sign In
-                    </a>
+
+                    <li class="nav-item" th:if="${currentUser == null}">
+                        <a class="nav-link btn-primary user-button" th:href="@{'/login'}">
+                            <i class="fas fa-sign-in-alt"></i> Sign In
+                        </a>
+                    </li>
+
+                    <li class="nav-item" th:if="${currentUser == null}">
+                        <a class="nav-link btn-primary user-button" th:href="@{'/participant/form'}">
+                            <i class="fas fa-user-plus"></i> Register
+                        </a>
+
+                    </li>
+
+
+                <li class="nav-item" th:if="${currentUser != null}">
+                     <div lass="nav-link" th:text="${currentUser}"></div>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link btn-primary user-button" th:href="@{'/participant/form'}">
-                        <i class="fas fa-user-plus"></i> Register
-                    </a>
+
+                <li class="nav-item" th:if="${currentUser != null}">
+                    <form id="logout-form" th:action="@{/logout}" method="post">
+                        <button type="submit" class="nav-link btn-primary">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </form>
                 </li>
+
             </ul>
         </div>
     </nav>
