@@ -11,14 +11,14 @@ public class DomainMapper {
         String name = domain.getName();
         String image = domain.getImage();
 
-        return new DomainDTO(id, name);
+        return new DomainDTO(id, name, image);
     }
 
     public Domain toDomain(DomainDTO domainDTO) {
         Domain domain = new Domain();
         domain.setId(domainDTO.getId());
         domain.setName(domainDTO.getName());
-      //  domain.setImage(domainDTO.getImage());
+        domain.setImage(domainDTO.getImage());
 
         return domain;
     }

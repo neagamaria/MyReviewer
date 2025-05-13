@@ -24,7 +24,7 @@ public class ArticleDTO {
     private Date postedDate;
     private String description;
     private String visibility;
-    private String document;
+//    private String document;
     private Account writer;
     private List<Review> reviews;
     private List<Domain> domains;

@@ -5,6 +5,7 @@ import com.awbd.myreviewer.repositories.security.UserRepository;
 import lombok.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import com.awbd.myreviewer.domain.security.Authority;
@@ -35,7 +36,7 @@ public class DataLoader implements CommandLineRunner {
             User reviewer = User.builder()
                     .username("reviewer")
                     .password(passwordEncoder.encode("12345"))
-                    .authority(writerRole)
+                    .authority(reviewerRole)
                     .build();
 
             User writer = User.builder()

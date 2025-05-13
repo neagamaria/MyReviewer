@@ -14,7 +14,7 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
     Optional<Article> findByName(String name);
 
     @Query("select a from Article a where a.visibility = 'public'")
-    Optional<Article> getALLPublic();
+    List<Article> getALLPublic();
     @Query("select a from Article a where a.writer.name = :name")
     List<Article> findByWriterName(@Param("name") String writerName);
 

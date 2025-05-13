@@ -1,5 +1,6 @@
 package com.awbd.myreviewer.controllers;
 
+import com.awbd.myreviewer.domain.Account;
 import com.awbd.myreviewer.domain.Article;
 import com.awbd.myreviewer.domain.Domain;
 import com.awbd.myreviewer.domain.Level;
@@ -8,6 +9,7 @@ import com.awbd.myreviewer.dtos.DomainDTO;
 import com.awbd.myreviewer.services.ArticleService;
 import com.awbd.myreviewer.services.DomainService;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +38,7 @@ public class ArticleController {
 
 
     // form to add an article
-    @RequestMapping("/form")
+    @GetMapping("/form")
     public String articleForm(Model model) {
         ArticleDTO article = new ArticleDTO();
         model.addAttribute("article", article);
@@ -49,21 +51,20 @@ public class ArticleController {
     }
 
     // save method
-    @PostMapping("/articles")
-    public String saveArticle(@ModelAttribute ArticleDTO article, @RequestParam("document") MultipartFile file,
-                              @RequestParam("domains") List<Long> domainIds) {
-        List<DomainDTO> domains = domainService.findByIds(domainIds);
-
-
-      //  article.setDomains(domains);
+    @PostMapping("/save")
+    public String saveArticle(@ModelAttribute ArticleDTO article, @RequestParam("document") MultipartFile file) {
 
         if(!file.isEmpty()) {
-            articleService.uploadDocument(article, file);
+            articleService.saveWithDocument(article, file);
         }
-
-        articleService.save(article);
 
         return "redirect:/articles";
     }
 
+    @RequestMapping("/user")
+    public String getArticlesByUser(Model model) {
+        List<ArticleDTO> articles = articleService.findByCurrentUser();
+        model.addAttribute("articles", articles);
+        return "myArticleList";
+    }
 }

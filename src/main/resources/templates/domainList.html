@@ -9,6 +9,8 @@
         <link rel="stylesheet" th:href="@{/css/main.css}" />
     </head>
     <body>
+    <div th:replace="menu :: menu"></div>
+    <br/>
     <tr th:each="domain, stat : ${domains}"
         th:class="${stat.odd}? 'table-light':''" xmlns:sec="http://www.w3.org/1999/xhtml">
         <td th:text="${domain.name}">1</td>

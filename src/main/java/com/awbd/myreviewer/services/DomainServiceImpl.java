@@ -36,7 +36,7 @@ public class DomainServiceImpl implements DomainService{
     public List<DomainDTO> findByIds(List<Long> ids) {
         List<Domain> domains = domainRepository.findByIdIn(ids);
 
-        return domains.stream().map(domain -> new DomainDTO(domain.getId(), domain.getName())).collect(Collectors.toList());
+        return domains.stream().map(domain -> new DomainDTO(domain.getId(), domain.getName(), domain.getImage())).collect(Collectors.toList());
     }
 
     @Override

@@ -1,9 +1,12 @@
 package com.awbd.myreviewer.services;
 
 import com.awbd.myreviewer.domain.Article;
+import com.awbd.myreviewer.domain.Account;
 import com.awbd.myreviewer.dtos.ArticleDTO;
+import com.awbd.myreviewer.repositories.AccountRepository;
 import com.awbd.myreviewer.repositories.ArticleRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,20 +15,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
 
     ArticleRepository articleRepository;
+    AccountRepository accountRepository;
     ModelMapper modelMapper;
 
-    public ArticleServiceImpl(ArticleRepository articleRepository, ModelMapper modelMapper) {
+    public ArticleServiceImpl(ArticleRepository articleRepository, AccountRepository accountRepository,
+                              ModelMapper modelMapper) {
         this.articleRepository = articleRepository;
+        this.accountRepository = accountRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -41,9 +44,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<ArticleDTO> findAllPublic() {
-        Optional<Article> publicArticles = articleRepository.getALLPublic();
+        List<Article> publicArticles = articleRepository.getALLPublic();
 
-        if(publicArticles.isEmpty()) {
+        if (publicArticles.isEmpty()) {
             throw new RuntimeException("Article not found!");
         }
         return publicArticles.stream()
@@ -56,18 +59,11 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleDTO findById(Long id) {
         Optional<Article> articleOptional = articleRepository.findById(id);
 
-        if(articleOptional.isEmpty()) {
+        if (articleOptional.isEmpty()) {
             throw new RuntimeException("Article not found!");
         }
 
         return modelMapper.map(articleOptional.get(), ArticleDTO.class);
-    }
-
-    @Override
-    public ArticleDTO save(ArticleDTO article) {
-
-        Article savedArticle = articleRepository.save(modelMapper.map(article, Article.class));
-        return modelMapper.map(savedArticle, ArticleDTO.class);
     }
 
     @Override
@@ -77,22 +73,45 @@ public class ArticleServiceImpl implements ArticleService {
 
 
     @Override
-    public void uploadDocument(ArticleDTO articleDTO, MultipartFile file) {
+    public void saveWithDocument(ArticleDTO articleDTO, MultipartFile file) {
         Article article = modelMapper.map(articleDTO, Article.class);
         String uploadPath = "";
 
         try {
-            if(!file.isEmpty()) {
+            if (!file.isEmpty()) {
+                // set document
                 String fileName = UUID.randomUUID() + file.getOriginalFilename();
                 Path filePath = Paths.get(uploadPath, fileName);
                 Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
                 article.setDocument(fileName);
+
+                // set account to which the article is assigned
+                String user = SecurityContextHolder.getContext().getAuthentication().getName();
+                Account writer = accountRepository.findByName(user);
+                article.setWriter(writer);
+
+                // set the current date
+                article.setPostedDate(new Date());
+
+                articleRepository.save(article);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
+
+    @Override
+    public List<ArticleDTO> findByCurrentUser() {
+        List<Article> articles = new LinkedList<>();
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
+        articleRepository.findByWriterName(user).iterator().forEachRemaining(articles::add);
+
+        return articles.stream()
+                .map(article -> modelMapper.map(article, ArticleDTO.class))
+                .collect(Collectors.toList());
+    }
 }
+
+

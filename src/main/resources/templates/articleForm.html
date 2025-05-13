@@ -11,25 +11,43 @@
     </head>
 
     <body>
+        <div th:replace="menu :: menu"></div>
+        <br/>
         <div class="container">
-            <form enctype="multipart/form-data" method="post" th:action="@{/articles}" th:object="${article}">
-                <input type="text" th:field="*{name}" placeholder="Name"/>
-                <textarea type="text" th:field="*{description}" rows="5" cols="50" placeholder="Description"></textarea>
+            <form enctype="multipart/form-data" method="post" th:action="@{/articles/save}" th:object="${article}">
+                <label>Name:</label>
+                <input type="text" th:field="*{name}" required/>
+                <br/>
+
+                <label>Description:</label>
+                <textarea type="text" th:field="*{description}" rows="5" cols="50"></textarea>
+                <br/>
+
+                <label>Level:</label>
                 <select th:field="*{level}">
                     <option th:each="level : ${levels}"
                             th:value="${level}"
                             th:text="${#strings.capitalize(level.name().toLowerCase())}">
                     </option>
                 </select>
+                <br/>
 
-                <select multiple th:field="*{domains}">
-                    <option th:each="domain : ${domains}"
-                            th:value="${domain.id}"
-                            th:text="${domain.name}">
-                    </option>
+                <label>Visibility:</label>
+                <select th:field="*{visibility}">
+                    <option th:value="${'public'}"></option>
+                    <option th:value="${'private'}"></option>
                 </select>
 
+                <label>Domains:</label>
+                <div th:each="domain : ${domains}">
+                    <input type="checkbox" th:value="${domain.id}" th:field="*{domains}" />
+                    <span th:text="${domain.name}"></span>
+                </div>
+                <br/>
+
+                <label>Upload Document:</label>
                 <input type="file" name="document"/>
+                <br/>
 
                 <button type="submit">Save</button>
             </form>

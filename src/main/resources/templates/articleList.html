@@ -1,10 +1,32 @@
-<tr th:each="article, stat : ${articles}"
-    th:class="${stat.odd}? 'table-light':''">
-    <td th:text="${article.id}">1</td>
-    <td th:text="${article.name}">Article 1</td>
-    <td th:text="${article.postedDate}">Posted date</td>
-    <td th:text="${article.description}">Description</td>
-    <td th:text="${article.level}">Level</td>
-    <td><a href="#" th:href="@{'/products/edit/' + ${article.id}}"><i class="fa-solid fa-pen"></i></a></td>
-    <td><a href="#" th:href="@{'/products/delete/' + ${article.id}}"><i class="fa-solid fa-trash"></i></a></td>
-</tr>
+<head>
+    <meta charset="UTF-8">
+    <script src="/webjars/jquery/3.7.1/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/5.3.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.3/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/webjars/font-awesome/6.5.2/css/all.min.css"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+</head>
+
+<body>
+    <div th:replace="menu :: menu"></div>
+    <br/>
+    <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')') || #authorization.expression('hasRole(''ROLE_WRITER'')')}">
+        <a th:href="@{/articles/user}" class="btn">My Articles</a>
+    </div>
+    <br/>
+    <tr th:each="article, stat : ${articles}"
+        th:class="${stat.odd}? 'table-light':''">
+        <td th:text="${article.id}">1</td>
+        <td th:text="${article.name}">Article 1</td>
+        <td th:text="${article.postedDate}">Posted date</td>
+        <td th:text="${article.description}">Description</td>
+        <td th:text="${article.level}">Level</td>
+        <div th:if="${article.getWriter().getName() == #authentication.getName()}">
+            <td><a href="#" th:href="@{'/products/edit/' + ${article.id}}"><i class="fa-solid fa-pen"></i></a></td>
+            <td><a href="#" th:href="@{'/products/delete/' + ${article.id}}"><i class="fa-solid fa-trash"></i></a></td>
+        </div>
+        <div th:if="${#authorization.expression('hasRole(''ROLE_REVIEWER'')')}">
+            <td><a href="#" th:href="@{'/reviews/add/' + ${article.id}}"><i class="fa-solid fa-comment-dots"></i></a></td>
+        </div>
+    </tr>
+</body>

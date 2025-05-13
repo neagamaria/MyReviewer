@@ -10,3 +10,7 @@ user-button {
 button {
     background-color: #20b899;
 }
+
+.fa-solid {
+    color: grey;
+}

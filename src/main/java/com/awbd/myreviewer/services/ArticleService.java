@@ -9,7 +9,7 @@ public interface ArticleService {
     List<ArticleDTO> findAll();
     List<ArticleDTO> findAllPublic();
     ArticleDTO findById(Long id);
-    ArticleDTO save(ArticleDTO article);
+    List<ArticleDTO> findByCurrentUser();
     void deleteById(Long id);
-    void uploadDocument(ArticleDTO article, MultipartFile file);
+    void saveWithDocument(ArticleDTO article, MultipartFile file);
 }
