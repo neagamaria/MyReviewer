@@ -26,6 +26,7 @@ public class ArticleDTO {
     private String visibility;
 //    private String document;
     private Account writer;
+    private String document;
     private List<Review> reviews;
     private List<Domain> domains;
     private Level level;

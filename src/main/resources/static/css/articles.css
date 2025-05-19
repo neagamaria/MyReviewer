@@ -11,11 +11,28 @@ button {
     color: grey;
 }
 
-.iframe {
-    border: 1px solid gray;
+iframe {
+    border: 2px solid gray;
 }
 
 .articles-container {
     display: grid;
     padding: 1%;
+}
+
+.text1 {
+    color: gray;
+    font-size: large;
+}
+
+.text2 {
+    background-color: #20b899;
+    color: white;
+    font-size: medium;
+}
+
+
+.date {
+    color: gray;
+    font-size: small;
 }
