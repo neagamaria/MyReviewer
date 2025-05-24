@@ -11,10 +11,18 @@
     <body>
     <div th:replace="menu :: menu"></div>
     <br/>
+    <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+        <a href="#" th:href="@{'/domains/form'}">Add new domain</a>
+    </div>
+    <br/>
     <tr th:each="domain, stat : ${domains}"
-        th:class="${stat.odd}? 'table-light':''" xmlns:sec="http://www.w3.org/1999/xhtml">
-        <td th:text="${domain.name}">1</td>
-        <span th:class="'bi bi-' + ${domain.image}"></span>
+        th:class="${stat.odd}? 'table-light':''">
+        <a href="#" th:href="@{'/articles/domain/' + ${domain.id}}"><div th:text="${domain.name}"></div></a>
+<!--        <span th:class="'bi bi-' + ${domain.image}"></span>-->
+        <br/>
+        <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+            <td><a href="#" th:href="@{'/domains/delete/' + ${domain.id}}"><i class="fa-solid fa-trash"></i></a></td>
+        </div>
     </tr>
     </body>
 </html>

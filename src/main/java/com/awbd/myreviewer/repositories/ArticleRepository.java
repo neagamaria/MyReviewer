@@ -18,8 +18,11 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
     @Query("select a from Article a where a.writer.name = :name")
     List<Article> findByWriterName(@Param("name") String writerName);
 
-    @Query("select a from Article a where a.writer.id = ?1")
-    List<Article> findByWriter(Long writerId);
+    @Query("select a from Article a where a.writer.id = :writerId")
+    List<Article> findByWriter(@Param("writerId") Long writerId);
 
-    Article save(Article article);
+    @Query("SELECT a FROM Article a JOIN a.domains d WHERE d.id = :domainId")
+    List<Article> findByDomain(@Param("domainId") Long domainId);
+
+    //Article save(Article article);
 }

@@ -6,6 +6,7 @@ import com.awbd.myreviewer.dtos.ArticleDTO;
 import com.awbd.myreviewer.repositories.AccountRepository;
 import com.awbd.myreviewer.repositories.ArticleRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -86,8 +87,9 @@ public class ArticleServiceImpl implements ArticleService {
 
                 article.setDocument(fileName);
 
-                // set account to which the article is assigned
+               //  set account to which the article is assigned
                 String user = SecurityContextHolder.getContext().getAuthentication().getName();
+
                 Account writer = accountRepository.findByName(user);
                 article.setWriter(writer);
 
@@ -107,6 +109,16 @@ public class ArticleServiceImpl implements ArticleService {
         List<Article> articles = new LinkedList<>();
         String user = SecurityContextHolder.getContext().getAuthentication().getName();
         articleRepository.findByWriterName(user).iterator().forEachRemaining(articles::add);
+
+        return articles.stream()
+                .map(article -> modelMapper.map(article, ArticleDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ArticleDTO> getByDomain(Long domainId) {
+        List<Article> articles = new LinkedList<>();
+        articleRepository.findByDomain(domainId).iterator().forEachRemaining(articles::add);
 
         return articles.stream()
                 .map(article -> modelMapper.map(article, ArticleDTO.class))

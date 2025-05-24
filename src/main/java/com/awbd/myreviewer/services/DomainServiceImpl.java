@@ -50,9 +50,9 @@ public class DomainServiceImpl implements DomainService{
     }
 
     @Override
-    public DomainDTO save(DomainDTO categoryDto) {
-        Domain savedCategory = domainRepository.save(domainMapper.toDomain(categoryDto));
-        return domainMapper.toDto(savedCategory);
+    public DomainDTO save(DomainDTO domainDTO) {
+        Domain savedDomain = domainRepository.save(domainMapper.toDomain(domainDTO));
+        return domainMapper.toDto(savedDomain);
     }
 
     @Override

@@ -10,6 +10,7 @@ public interface ArticleService {
     List<ArticleDTO> findAllPublic();
     ArticleDTO findById(Long id);
     List<ArticleDTO> findByCurrentUser();
+    List<ArticleDTO> getByDomain(Long domainId);
     void deleteById(Long id);
     void saveWithDocument(ArticleDTO article, MultipartFile file);
 }

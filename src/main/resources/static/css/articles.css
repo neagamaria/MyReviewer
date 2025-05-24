@@ -17,22 +17,57 @@ iframe {
 
 .articles-container {
     display: grid;
-    padding: 1%;
+    grid-template-columns: 10% auto 30%;
 }
 
-.text1 {
+
+.grid-col {
+    grid-column-start: 2;
+    grid-column-end: 2;
+}
+
+.title-left {
     color: gray;
-    font-size: large;
+    font-size: 200%;
+    float:left;
 }
 
-.text2 {
+.float-right{
+    float:right;
+}
+
+.float-left{
+    float:left;
+}
+
+.edit {
+    padding-top: 10px;
+    float:left;
+}
+
+.review {
+    padding-top: 5px;
+    float:left;
+}
+
+.delete {
+    padding-top: 14px;
+    float:left;
+}
+
+.level {
     background-color: #20b899;
     color: white;
     font-size: medium;
+    float: left;
+    padding:5px;
+    border-radius: 2px;
 }
 
-
-.date {
+.clear-both {
+    clear: both;
+}
+.subtitle {
     color: gray;
     font-size: small;
 }

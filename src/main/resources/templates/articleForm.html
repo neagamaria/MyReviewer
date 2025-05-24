@@ -15,6 +15,7 @@
         <br/>
         <div class="container">
             <form enctype="multipart/form-data" method="post" th:action="@{/articles/save}" th:object="${article}">
+                <input th:field="*{id}" type="hidden"/>
                 <label>Name:</label>
                 <input type="text" th:field="*{name}" required/>
                 <br/>
@@ -46,7 +47,7 @@
                 <br/>
 
                 <label>Upload Document:</label>
-                <input type="file" name="document"/>
+                <input type="file" name="documentFile"/>
                 <br/>
 
                 <button type="submit">Save</button>

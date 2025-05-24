@@ -9,4 +9,6 @@ public interface ReviewService {
     public List<ReviewDTO> findAllByArticle(Long articleId);
 
     public void addReviewToArticle(ReviewDTO reviewDTO, ArticleDTO articleDTO);
+
+    public void deleteById(Long id);
 }
