@@ -22,5 +22,5 @@ public class MainController {
     public String showLogInForm(){ return "login"; }
 
     @GetMapping("/access_denied")
-    public String accessDeniedPage(){ return "accessDenied.html"; }
+    public String accessDeniedPage(){ return "accessDenied"; }
 }

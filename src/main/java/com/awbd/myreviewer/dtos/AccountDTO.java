@@ -19,7 +19,6 @@ public class AccountDTO {
     private String name;
     private String email;
     private String role;
-    private String description;
     private List<Article> articles;
     private List<Review> reviews;
 }

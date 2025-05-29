@@ -28,14 +28,22 @@ public class SecurityJpaConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/product/form").hasRole("ADMIN")
+                        .requestMatchers("/articles/form").hasAnyRole("ADMIN", "WRITER")
                         .requestMatchers("/", "/webjars/**", "/login", "/resources/**").permitAll()
-                        .requestMatchers("/product/*").hasAnyRole("ADMIN", "GUEST")
-                        .requestMatchers("/categories/*").hasAnyRole("ADMIN", "GUEST")
+                        .requestMatchers("/articles/*").hasAnyRole("ADMIN", "REVIEWER", "WRITER")
+                        .requestMatchers("/categories/form").hasAnyRole("ADMIN", "GUEST", "WRITER")
+                        .requestMatchers("/categories/delete").hasAnyRole("ADMIN")
+                        .requestMatchers("/reviews/*").hasAnyRole("ADMIN", "REVIEWER")
                         .anyRequest().authenticated()
                 ).headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
-                )
+                ).formLogin(formLogin ->
+                formLogin
+                        .loginPage("/login")
+                        .permitAll()
+                        .loginProcessingUrl("/perform_login")
+                 )
+                .exceptionHandling(ex -> ex.accessDeniedPage("/access_denied"))
                 .userDetailsService(userDetailsService)
                 .httpBasic(Customizer.withDefaults())
                 .build();
