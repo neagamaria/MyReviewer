@@ -35,6 +35,9 @@ dependencies {
     implementation 'org.webjars:font-awesome:6.5.2'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    implementation 'org.hibernate.validator:hibernate-validator'
+
+    annotationProcessor 'org.hibernate.validator:hibernate-validator-annotation-processor'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

@@ -5,6 +5,7 @@ import com.awbd.myreviewer.dtos.ArticleDTO;
 import com.awbd.myreviewer.dtos.DomainDTO;
 import com.awbd.myreviewer.services.ArticleService;
 import com.awbd.myreviewer.services.DomainService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -43,7 +44,7 @@ public class DomainController {
 
     // add new domain
     @PostMapping("/save")
-    public String saveDomain(@ModelAttribute DomainDTO domain, BindingResult bindingResult) {
+    public String saveDomain(@Valid @ModelAttribute DomainDTO domain, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()){
             return "domainForm";

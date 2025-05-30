@@ -10,15 +10,29 @@
 <body>
     <div th:replace="menu :: menu"></div>
     <br/>
+    <form method="get" action="/articles" th:class="float-right">
+        <input type="hidden" name="page" th:value="${number}" />
+        <input type="hidden" name="size" th:value="${size}" />
+        <input type="hidden" name="ascending" th:value="${ascending}" />
+
+        <label for="sortBy">Sort by:</label>
+        <select name="sortBy" id="sortBy" onchange="this.form.submit()">
+            <option value="name" th:selected="${sortBy == 'name'}">Name ↓</option>
+            <option value="postedDate" th:selected="${sortBy == 'postedDate'}">Posting date ↓</option>
+        </select>
+    </form>
+    <div class="clear-both"></div>
+    <br/>
     <div th:class="float-right" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')') || #authorization.expression('hasRole(''ROLE_WRITER'')')}">
         <a th:href="@{/articles/user}" class="btn btn-light">My Articles</a>
     </div>
     <div class="clear-both"></div>
     <br/>
+
     <div class="articles-container">
-        <div th:each="article, stat : ${articles}"
-            th:class="grid-col">
-            <div th:text="${article.name}" th:class="title-left">Article</div>
+        <div th:each="article, stat : ${articles.getContent()}" th:class="grid-col" th:if="${article.getVisibility() == 'public'}">
+            <div th:class="clear-both"></div>
+            <div th:text="${article.name}" th:class="title-left">Article <p th:text="${stars[stat.index]} + ' stars'"></p></div>
             <div th:if="${article.getWriter().getName() == #authentication.getName()}" th:class="float-right">
                 <div th:class="edit"><a href="#" th:href="@{'/articles/edit/' + ${article.id}}"><i class="fa-solid fa-pen"></i></a>&nbsp;&nbsp;</div>
                 <div th:class="delete"><a href="#" th:href="@{'/articles/delete/' + ${article.id}}"><i class="fa-solid fa-trash"></i></a></div>
@@ -43,5 +57,18 @@
             <br/>
             <hr/>
         </div>
+    </div>
+
+    <br/>
+    <div>
+        <a th:if="${hasPrev}"
+           th:href="@{|?page=${number - 1}&size=${articles.size}&sortBy=${sortBy}&ascending=${ascending}|}">
+            Previous
+        </a>
+        <span>Page <span th:text="${number + 1}"></span> of <span th:text="${totalPages}"></span></span>
+        <a th:if="${hasNext}"
+           th:href="@{|?page=${number + 1}&size=${articles.size}&sortBy=${sortBy}&ascending=${ascending}|}">
+            Next
+        </a>
     </div>
 </body>

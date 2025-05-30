@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,8 +43,10 @@ public class ReviewServiceImpl implements ReviewService{
 
         // set the current logged-in user as reviewer
         String user = SecurityContextHolder.getContext().getAuthentication().getName();
-        Account reviewer = accountRepository.findByName(user);
-        review.setReviewer(reviewer);
+        Optional<Account> reviewer = accountRepository.findByName(user);
+
+        reviewer.ifPresent(review::setReviewer);
+
 
         // set the posted date
         review.setPostedDate(LocalDateTime.now());

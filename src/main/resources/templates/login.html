@@ -11,7 +11,7 @@
 <body>
 <div class="container" style="margin-top: 20px">
     <div class="col-md-6 col-md-offset-3">
-        <form class="form-signin" method="post" th:action="perform_login">
+        <form class="form-signin" method="post" th:action="@{/login}">
             <h2 class="form-signin-heading">Sign in ....</h2>
             <p>
             <p th:if="${param.error}" class="text-danger">Invalid user or password</p>
@@ -23,10 +23,12 @@
                 <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
             </p>
 
-
-
             <button class="btn btn-success" style="background-color: #20b899" type="submit">Sign in</button>
         </form>
+
+        <br/>
+        <span>Do not have an account?</span>
+        <a class="link-opacity-100-hover" style="color: #20b899" th:href="@{/accounts/form}">Register</a>
     </div>
 </div>
 </body>

@@ -34,6 +34,8 @@ public class SecurityJpaConfig {
                         .requestMatchers("/categories/form").hasAnyRole("ADMIN", "GUEST", "WRITER")
                         .requestMatchers("/categories/delete").hasAnyRole("ADMIN")
                         .requestMatchers("/reviews/*").hasAnyRole("ADMIN", "REVIEWER")
+                        .requestMatchers("/accounts/form").permitAll()
+                        .requestMatchers("/").permitAll()
                         .anyRequest().authenticated()
                 ).headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
@@ -41,7 +43,6 @@ public class SecurityJpaConfig {
                 formLogin
                         .loginPage("/login")
                         .permitAll()
-                        .loginProcessingUrl("/perform_login")
                  )
                 .exceptionHandling(ex -> ex.accessDeniedPage("/access_denied"))
                 .userDetailsService(userDetailsService)

@@ -2,6 +2,7 @@ package com.awbd.myreviewer.services;
 
 import com.awbd.myreviewer.domain.Account;
 import com.awbd.myreviewer.dtos.AccountDTO;
+import com.awbd.myreviewer.exceptions.ResourceNotFoundException;
 import com.awbd.myreviewer.repositories.AccountRepository;
 import com.awbd.myreviewer.services.AccountService;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,17 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountDTO findById(Long id) {
         Optional<Account> accountOptional = accountRepository.findById(id);
+
+        if(accountOptional.isEmpty()) {
+            throw new ResourceNotFoundException("article " + id + " not found");
+        }
+
+        return accountMapper.toDto(accountOptional.get());
+    }
+
+    @Override
+    public AccountDTO findByName(String name) {
+        Optional<Account> accountOptional = accountRepository.findByName(name);
 
         if(accountOptional.isEmpty()) {
             throw new RuntimeException("Account not found");

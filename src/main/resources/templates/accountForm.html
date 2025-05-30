@@ -11,9 +11,6 @@
 </head>
 
 <body>
-    <div th:replace="menu :: menu"></div>
-    <br/>
-
     <form enctype="multipart/form-data" method="post" th:action="@{/accounts/save}" th:object="${account}">
         <h2 class="form-signin-heading">Sign up ....</h2>
         <p>
@@ -31,13 +28,17 @@
         </p>
 
         <p>
-            <label>Role:</label>
+
+        <label>Role:</label>
         <div th:each="role : ${roles}">
-            <input type="checkbox" th:value="${role}" th:field="*{role}" />
+            <input type="radio" th:value="${role}" th:field="*{role}" />
             <span th:text="${role}"></span>
         </div>
         <br/>
         </p>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+        <button class="btn btn-success" style="background-color: #20b899" type="submit">Sign up</button>
     </form>
+    <br/>
+    <span>Already have an account?</span>
+    <a class="link-opacity-100-hover" style="color: #20b899" th:href="@{/login}">LogIn</a>
 </body>

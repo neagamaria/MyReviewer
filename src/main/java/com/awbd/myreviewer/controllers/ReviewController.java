@@ -4,6 +4,7 @@ import com.awbd.myreviewer.dtos.DomainDTO;
 import com.awbd.myreviewer.services.ArticleService;
 import com.awbd.myreviewer.services.DomainService;
 import com.awbd.myreviewer.services.ReviewService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;

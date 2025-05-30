@@ -6,6 +6,8 @@ import com.awbd.myreviewer.dtos.ArticleDTO;
 import com.awbd.myreviewer.repositories.AccountRepository;
 import com.awbd.myreviewer.repositories.ArticleRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -41,6 +43,11 @@ public class ArticleServiceImpl implements ArticleService {
         return articles.stream()
                 .map(article -> modelMapper.map(article, ArticleDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<Article> findAll(Pageable pageable) {
+        return articleRepository.findAll(pageable);
     }
 
     @Override
@@ -90,8 +97,10 @@ public class ArticleServiceImpl implements ArticleService {
                //  set account to which the article is assigned
                 String user = SecurityContextHolder.getContext().getAuthentication().getName();
 
-                Account writer = accountRepository.findByName(user);
-                article.setWriter(writer);
+                Optional<Account> writer = accountRepository.findByName(user);
+
+                writer.ifPresent(article::setWriter);
+
 
                 // set the current date
                 article.setPostedDate(new Date());

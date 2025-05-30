@@ -1,14 +1,23 @@
 package com.awbd.myreviewer.controllers;
 
+import com.awbd.myreviewer.domain.Article;
 import com.awbd.myreviewer.domain.Level;
+import com.awbd.myreviewer.domain.Review;
 import com.awbd.myreviewer.dtos.ArticleDTO;
 import com.awbd.myreviewer.dtos.DomainDTO;
 import com.awbd.myreviewer.dtos.ReviewDTO;
+import com.awbd.myreviewer.exceptions.ResourceNotFoundException;
 import com.awbd.myreviewer.services.ArticleService;
 import com.awbd.myreviewer.services.DomainService;
 import com.awbd.myreviewer.services.ReviewService;
+import jakarta.validation.Valid;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,8 +30,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/articles")
@@ -38,10 +49,66 @@ public class ArticleController {
         this.reviewService = reviewService;
     }
 
+//    @RequestMapping("")
+//    public String getPublicArticlesList(Model model) {
+//
+//
+//       List<ArticleDTO> articles = articleService.findAllPublic();
+//       model.addAttribute("articles", articles);
+//
+//        return "articleList";
+//    }
+
+
     @RequestMapping("")
-    public String getPublicArticlesList(Model model) {
-        List<ArticleDTO> articles = articleService.findAllPublic();
+    public String getWithPagination(Model model,
+                                        @RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "3") int size,
+                                        @RequestParam(defaultValue = "postedDate") String sortBy,
+                                        @RequestParam(defaultValue = "false") String ascendingString) {
+
+        boolean ascending = Objects.equals(ascendingString, "true");
+        // set sorting and paging
+        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Article> articles = articleService.findAll(pageable);
+
+        // calculate grades for star system
+        List<Integer> stars = new ArrayList<Integer>();
+
+        for(Article article: articles.getContent()) {
+            List<ReviewDTO> reviews = reviewService.findAllByArticle(article.getId());
+            Integer grade = 0;
+
+            if(!reviews.isEmpty()) {
+                for (ReviewDTO review : reviews) {
+                    grade += review.getGrade().intValue();
+                }
+
+                grade = grade / reviews.size();
+                stars.add(grade);
+            }
+            else {
+                stars.add(0);
+            }
+        }
+
+        model.addAttribute("stars", stars);
+
+        boolean hasPrev = articles.hasPrevious();
+        boolean hasNext = articles.hasNext();
+
+
         model.addAttribute("articles", articles);
+        model.addAttribute("hasNext", hasNext);
+        model.addAttribute("hasPrev", hasPrev);
+        model.addAttribute("number", articles.getNumber());
+        model.addAttribute("totalPages", articles.getTotalPages());
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("ascending", ascending);
+        model.addAttribute("size", size);
+
         return "articleList";
     }
 
@@ -77,11 +144,15 @@ public class ArticleController {
 
     // save article
     @PostMapping("/save")
-    public String saveArticle(@ModelAttribute("article") ArticleDTO article, @RequestParam("documentFile") MultipartFile file) {
+    public String saveArticle(@Valid @ModelAttribute("article") ArticleDTO article, BindingResult bindingResult,
+                              @RequestParam("documentFile") MultipartFile file) {
 
         if(!file.isEmpty()) {
             articleService.saveWithDocument(article, file);
         }
+
+        if (bindingResult.hasErrors())
+            return "articleForm";
 
         return "redirect:/articles";
     }
@@ -123,16 +194,21 @@ public class ArticleController {
         model.addAttribute("articleId", articleId);
         model.addAttribute("review", review);
 
+
+
         return "reviewForm";
     }
 
 
     // add a review to article
     @PostMapping("/{articleId}/review")
-    public String addReviewToArticle(@ModelAttribute ReviewDTO review, @PathVariable Long articleId) {
+    public String addReviewToArticle(@Valid @ModelAttribute ReviewDTO review, BindingResult bindingResult, @PathVariable Long articleId) {
         ArticleDTO article = articleService.findById(articleId);
         reviewService.addReviewToArticle(review, article);
 
+        if(bindingResult.hasErrors()) {
+            return "reviewForm";
+        }
         return "redirect:/articles";
     }
 
@@ -168,4 +244,5 @@ public class ArticleController {
 
         return "articleList";
     }
+
 }

@@ -23,13 +23,13 @@
                 </ul>
                 <ul class="navbar-nav ms-auto topnav">
 
-                    <li class="nav-item" th:if="${#authentication.isAuthenticated() == false}">
+                    <li class="nav-item" th:if="${#authentication.getName() == 'anonymousUser'}">
                         <a class="nav-link btn-primary user-button" th:href="@{'/login'}">
                             <i class="fas fa-sign-in-alt"></i> Sign In
                         </a>
                     </li>
 
-                    <li class="nav-item" th:if="${#authentication.isAuthenticated() == false}">
+                    <li class="nav-item" th:if="${#authentication.name == 'anonymousUser'}">
                         <a class="nav-link btn-primary user-button" th:href="@{'/participant/form'}">
                             <i class="fas fa-user-plus"></i> Register
                         </a>
@@ -37,11 +37,11 @@
                     </li>
 
 
-                    <li class="nav-item" th:if="${#authentication.isAuthenticated()}">
-                        <div class="nav-link" th:text="${#authentication.name}"></div>
+                    <li class="nav-item" th:if="${#authentication.name != 'anonymousUser'}">
+                        <a class="nav-link" th:href="@{'/accounts/' + ${accountId}}" th:text="${#authentication.name}"></a>
                     </li>
 
-                    <li class="nav-item" th:if="${#authentication.isAuthenticated()}">
+                    <li class="nav-item" th:if="${#authentication.name != 'anonymousUser'}">
                         <form id="logout-form" th:action="@{/logout}" method="post">
                             <button type="submit" class="nav-link btn-primary">
                                 <i class="fas fa-sign-out-alt"></i> Logout

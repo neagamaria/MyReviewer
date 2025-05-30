@@ -7,6 +7,7 @@ import com.awbd.myreviewer.services.AccountService;
 import com.awbd.myreviewer.services.security.JpaUserDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,7 +63,8 @@ public class AccountController {
     }
 
     @PostMapping("/save")
-    public String saveAccount(@ModelAttribute("account") AccountDTO account, @ModelAttribute("password") String password) {
+    public String saveAccount(@Valid @ModelAttribute("account") AccountDTO account, BindingResult bindingResult,
+                              @ModelAttribute("password") String password) {
         // encode password
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         password = passwordEncoder.encode(password);
@@ -70,8 +73,17 @@ public class AccountController {
         // save account
         accountService.save(account);
 
+        if (bindingResult.hasErrors())
+            return "accountForm";
 
-        return "redirect:/articles";
+        return "redirect:/";
     }
 
+    @GetMapping("/{id}")
+    public String showAccount(Model model, @PathVariable String id) {
+        model.addAttribute("account",
+                accountService.findById(Long.valueOf(id)));
+
+        return "/accountInfo";
+    }
 }
