@@ -28,7 +28,8 @@ iframe {
 
 .title-left {
     color: gray;
-    font-size: 200%;
+    font-size: 300%;
+    font-weight: bold;
     float:left;
 }
 
@@ -70,4 +71,9 @@ iframe {
 .subtitle {
     color: gray;
     font-size: small;
+}
+
+img {
+    width: 40%;
+    float: left;
 }

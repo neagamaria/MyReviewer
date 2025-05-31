@@ -10,6 +10,13 @@
 <body>
     <div th:replace="menu :: menu"></div>
     <br/>
+    <div class="clear-both"></div>
+    <br/>
+    <div th:class="float-right" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')') || #authorization.expression('hasRole(''ROLE_WRITER'')')}">
+        <a th:href="@{/articles/user}" class="btn btn-light">My Articles</a>
+    </div>
+    <div class="clear-both"></div>
+    <br/>
     <form method="get" action="/articles" th:class="float-right">
         <input type="hidden" name="page" th:value="${number}" />
         <input type="hidden" name="size" th:value="${size}" />
@@ -21,18 +28,14 @@
             <option value="postedDate" th:selected="${sortBy == 'postedDate'}">Posting date ↓</option>
         </select>
     </form>
-    <div class="clear-both"></div>
-    <br/>
-    <div th:class="float-right" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')') || #authorization.expression('hasRole(''ROLE_WRITER'')')}">
-        <a th:href="@{/articles/user}" class="btn btn-light">My Articles</a>
-    </div>
-    <div class="clear-both"></div>
     <br/>
 
     <div class="articles-container">
         <div th:each="article, stat : ${articles.getContent()}" th:class="grid-col" th:if="${article.getVisibility() == 'public'}">
             <div th:class="clear-both"></div>
-            <div th:text="${article.name}" th:class="title-left">Article <p th:text="${stars[stat.index]} + ' stars'"></p></div>
+            <div th:text="${article.name}" th:class="title-left"></div>
+            <div th:if="${stars[stat.index] != 0}"><img style="width:15%" th:src="@{'/stars-' + ${stars[stat.index]} + '.png'}" alt="stars"/></div>
+            <div th:class="clear-both"></div>
             <div th:if="${article.getWriter().getName() == #authentication.getName()}" th:class="float-right">
                 <div th:class="edit"><a href="#" th:href="@{'/articles/edit/' + ${article.id}}"><i class="fa-solid fa-pen"></i></a>&nbsp;&nbsp;</div>
                 <div th:class="delete"><a href="#" th:href="@{'/articles/delete/' + ${article.id}}"><i class="fa-solid fa-trash"></i></a></div>
@@ -48,6 +51,7 @@
             <br/>
             <iframe th:src="@{'/articles/' + ${article.document}}" type="application/pdf" width="50%" height="200px"></iframe>
             <br/>
+            <a class="link-underline-success" th:href="@{'/getDocument/' + ${article.id}}" download>Download document</a>
             <br/>
             <div th:class="float-left"><a href="#" th:href="@{'/articles/' + ${article.id} + '/reviewList'}">Reviews</a>&nbsp;&nbsp;</div>
             <div th:class="float-left" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')') || #authorization.expression('hasRole(''ROLE_REVIEWER'')')}">
@@ -56,6 +60,7 @@
             <div th:class="clear-both"></div>
             <br/>
             <hr/>
+            <br/>
         </div>
     </div>
 

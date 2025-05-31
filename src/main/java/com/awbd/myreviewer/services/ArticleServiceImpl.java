@@ -3,6 +3,7 @@ package com.awbd.myreviewer.services;
 import com.awbd.myreviewer.domain.Article;
 import com.awbd.myreviewer.domain.Account;
 import com.awbd.myreviewer.dtos.ArticleDTO;
+import com.awbd.myreviewer.exceptions.ResourceNotFoundException;
 import com.awbd.myreviewer.repositories.AccountRepository;
 import com.awbd.myreviewer.repositories.ArticleRepository;
 import org.modelmapper.ModelMapper;
@@ -68,7 +69,7 @@ public class ArticleServiceImpl implements ArticleService {
         Optional<Article> articleOptional = articleRepository.findById(id);
 
         if (articleOptional.isEmpty()) {
-            throw new RuntimeException("Article not found!");
+            throw new ResourceNotFoundException("article " + id + " not found");
         }
 
         return modelMapper.map(articleOptional.get(), ArticleDTO.class);
@@ -76,6 +77,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public void deleteById(Long id) {
+
         articleRepository.deleteById(id);
     }
 

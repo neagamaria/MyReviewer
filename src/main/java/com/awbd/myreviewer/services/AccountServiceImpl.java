@@ -38,7 +38,7 @@ public class AccountServiceImpl implements AccountService {
         Optional<Account> accountOptional = accountRepository.findById(id);
 
         if(accountOptional.isEmpty()) {
-            throw new ResourceNotFoundException("article " + id + " not found");
+            throw new ResourceNotFoundException("account " + id + " not found");
         }
 
         return accountMapper.toDto(accountOptional.get());
@@ -49,7 +49,7 @@ public class AccountServiceImpl implements AccountService {
         Optional<Account> accountOptional = accountRepository.findByName(name);
 
         if(accountOptional.isEmpty()) {
-            throw new RuntimeException("Account not found");
+            throw new ResourceNotFoundException("account " + name + " not found");
         }
 
         return accountMapper.toDto(accountOptional.get());

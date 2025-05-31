@@ -2,6 +2,7 @@ package com.awbd.myreviewer.services;
 
 import com.awbd.myreviewer.domain.Domain;
 import com.awbd.myreviewer.dtos.DomainDTO;
+import com.awbd.myreviewer.exceptions.ResourceNotFoundException;
 import com.awbd.myreviewer.mappers.DomainMapper;
 import com.awbd.myreviewer.repositories.DomainRepository;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class DomainServiceImpl implements DomainService{
     public DomainDTO findById(Long l) {
         Optional<Domain> categoryOptional = domainRepository.findById(l);
         if (!categoryOptional.isPresent()) {
-            throw new RuntimeException("Domain not found!");
+            throw new ResourceNotFoundException("domain  " + l + " not found");
         }
 
         return domainMapper.toDto(categoryOptional.get());

@@ -6,17 +6,18 @@ import com.awbd.myreviewer.domain.Review;
 import com.awbd.myreviewer.dtos.ArticleDTO;
 import com.awbd.myreviewer.dtos.DomainDTO;
 import com.awbd.myreviewer.dtos.ReviewDTO;
-import com.awbd.myreviewer.exceptions.ResourceNotFoundException;
 import com.awbd.myreviewer.services.ArticleService;
 import com.awbd.myreviewer.services.DomainService;
 import com.awbd.myreviewer.services.ReviewService;
 import jakarta.validation.Valid;
+
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,10 +31,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequestMapping("/articles")
@@ -129,6 +127,33 @@ public class ArticleController {
     }
 
 
+
+    @GetMapping("/getDocument/{id}")
+    public ResponseEntity<byte[]> downloadDocument(@PathVariable Long id) throws IOException {
+        ArticleDTO articleDTO = articleService.findById(id);
+
+        if (articleDTO == null || articleDTO.getDocument() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String fileName = articleDTO.getDocument();
+        Path filePath = Paths.get(fileName);
+
+        if (!Files.exists(filePath)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        byte[] fileBytes = Files.readAllBytes(filePath);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", fileName);
+
+        return new ResponseEntity<>(fileBytes, headers, HttpStatus.OK);
+    }
+
+
+
     // form to add an article
     @GetMapping("/form")
     public String articleForm(Model model) {
@@ -173,6 +198,13 @@ public class ArticleController {
     // delete article
     @RequestMapping("/delete/{id}")
     public String deleteById(@PathVariable String id){
+        List<ReviewDTO> reviews = reviewService.findAllByArticle(Long.valueOf(id));
+        if(!reviews.isEmpty()) {
+            for(ReviewDTO review: reviews) {
+                reviewService.deleteById(review.getId());
+            }
+        }
+
         articleService.deleteById(Long.valueOf(id));
         return "redirect:/articles";
     }
@@ -194,8 +226,6 @@ public class ArticleController {
         model.addAttribute("articleId", articleId);
         model.addAttribute("review", review);
 
-
-
         return "reviewForm";
     }
 
@@ -203,12 +233,13 @@ public class ArticleController {
     // add a review to article
     @PostMapping("/{articleId}/review")
     public String addReviewToArticle(@Valid @ModelAttribute ReviewDTO review, BindingResult bindingResult, @PathVariable Long articleId) {
-        ArticleDTO article = articleService.findById(articleId);
-        reviewService.addReviewToArticle(review, article);
 
         if(bindingResult.hasErrors()) {
             return "reviewForm";
         }
+        ArticleDTO article = articleService.findById(articleId);
+        reviewService.addReviewToArticle(review, article);
+
         return "redirect:/articles";
     }
 
