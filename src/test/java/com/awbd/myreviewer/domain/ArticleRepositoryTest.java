@@ -33,7 +33,7 @@ public class ArticleRepositoryTest {
 
     @Test
     public void findArticlesByWriterName() {
-        List<Article> articles = articleRepository.findByWriterName("Account1");
+        List<Article> articles = articleRepository.findByWriterName("User1");
         assertTrue(articles.size() >= 1);
         log.info("findByWriter ByWriterName...");
         articles.forEach(article -> log.info(article.getName()));

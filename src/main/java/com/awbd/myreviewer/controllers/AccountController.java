@@ -8,6 +8,7 @@ import com.awbd.myreviewer.services.security.JpaUserDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,7 +34,7 @@ public class AccountController {
     AccountService accountService;
     JpaUserDetailsService userService;
 
-    public AccountController(AccountService accountService, JpaUserDetailsService userService) {
+    public AccountController(AccountService accountService, @Lazy JpaUserDetailsService userService) {
         this.accountService = accountService;
         this.userService = userService;
     }

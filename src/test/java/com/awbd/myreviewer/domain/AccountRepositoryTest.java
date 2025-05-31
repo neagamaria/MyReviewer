@@ -28,7 +28,7 @@ public class AccountRepositoryTest {
 
     @Test
     public void findByName() {
-        List<Account> accounts = accountRepository.findByNameLike("%Test%");
+        List<Account> accounts = accountRepository.findByNameLike("%User%");
         assertFalse(accounts.isEmpty());
         log.info("findByLastNameLike...");
         accounts.forEach(account -> log.info(account.getName()));
