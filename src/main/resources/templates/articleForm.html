@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+
+        <script src="/webjars/jquery/3.7.1/jquery.min.js"></script>
+        <script src="/webjars/bootstrap/5.3.3/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="/webjars/bootstrap/5.3.3/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="/webjars/font-awesome/6.5.2/css/all.min.css"/>
+        <link rel="stylesheet" th:href="@{/css/form.css}" />
+    </head>
+
+    <body>
+        <div th:replace="menu :: menu"></div>
+        <br/>
+        <div class="container">
+            <form enctype="multipart/form-data" method="post" th:action="@{/articles/save}" th:object="${article}">
+                <input th:field="*{id}" type="hidden"/>
+                <label>Name:</label>
+                <input type="text" th:field="*{name}" required/>
+                <br/>
+
+                <label>Description:</label>
+                <textarea type="text" th:field="*{description}" rows="5" cols="50"></textarea>
+                <br/>
+
+                <label>Level:</label>
+                <select th:field="*{level}">
+                    <option th:each="level : ${levels}"
+                            th:value="${level}"
+                            th:text="${#strings.capitalize(level.name().toLowerCase())}">
+                    </option>
+                </select>
+                <br/>
+
+                <label>Visibility:</label>
+                <select th:field="*{visibility}">
+                    <option value="public">public</option>
+                    <option value="private">private</option>
+                </select>
+
+                <label>Domains:</label>
+                <div th:each="domain : ${domains}">
+                    <input type="checkbox" th:value="${domain.id}" th:field="*{domains}" />
+                    <span th:text="${domain.name}"></span>
+                </div>
+                <br/>
+
+                <label>Upload Document:</label>
+                <input type="file" name="documentFile"/>
+                <br/>
+
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </body>
+
+</html>

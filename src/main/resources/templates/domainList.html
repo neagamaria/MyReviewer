@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <script src="/webjars/jquery/3.7.1/jquery.min.js"></script>
+        <script src="/webjars/bootstrap/5.3.3/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="/webjars/bootstrap/5.3.3/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="/webjars/font-awesome/6.5.2/css/all.min.css"/>
+        <link rel="stylesheet" th:href="@{/css/articles.css}" />
+    </head>
+    <body>
+    <div th:replace="menu :: menu"></div>
+    <br/>
+    <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+        <a href="#" th:href="@{'/domains/form'}" class="btn btn-light">Add new domain</a>
+    </div>
+    <br/>
+    <tr th:each="domain, stat : ${domains}" class="domain-entry">
+        <a href="#" th:href="@{'/articles/domain/' + ${domain.id}}"><div class="domain-name" th:text="${domain.name}"></div></a>
+        <br/>
+        <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+            <td class="float-right"><a href="#" th:href="@{'/domains/delete/' + ${domain.id}}"><i class="fa-solid fa-trash"></i></a></td>
+        </div>
+        <br/>
+    </tr>
+    </body>
+</html>

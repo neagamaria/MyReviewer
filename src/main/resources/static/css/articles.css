@@ -1,0 +1,117 @@
+.container-colored {
+    background-color: #f6f4f5;
+    border-bottom-color: cadetblue;
+}
+
+button {
+    background-color: #20b899;
+}
+
+.fa-solid {
+    color: grey;
+}
+
+iframe {
+    border: 2px solid gray;
+}
+
+.articles-container {
+    display: grid;
+    grid-template-columns: 10% auto 30%;
+}
+
+
+.grid-col {
+    grid-column-start: 2;
+    grid-column-end: 2;
+}
+
+.title-left {
+    color: gray;
+    font-size: 250%;
+    font-weight: bold;
+    float:left;
+}
+
+.float-right{
+    float:right;
+}
+
+.float-left{
+    float:left;
+}
+
+.edit {
+    padding-top: 10px;
+    float:left;
+}
+
+.review {
+    padding-top: 5px;
+    float:left;
+}
+
+.delete {
+    padding-top: 14px;
+    float:left;
+}
+
+.level {
+    background-color: #20b899;
+    color: white;
+    font-size: medium;
+    float: left;
+    padding:5px;
+    border-radius: 2px;
+}
+
+.clear-both {
+    clear: both;
+}
+.subtitle {
+    color: gray;
+    font-size: small;
+}
+
+img {
+    width: 40%;
+    float: left;
+}
+
+.domain-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    background-color: #f9f9f9;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    transition: background-color 0.3s ease;
+}
+
+.domain-entry:nth-child(odd) {
+    background-color: #efefef;
+}
+
+.domain-name {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.domain-name:hover {
+    color: #007acc;
+}
+
+.delete-icon a {
+    color: #cc0000;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.delete-icon a:hover {
+    color: #a00000;
+}
+
