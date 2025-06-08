@@ -10,11 +10,12 @@ import java.util.List;
 
 public interface ArticleService {
     List<ArticleDTO> findAll();
-    public Page<Article> findAll(Pageable pageable);
+    Page<Article> findAll(Pageable pageable);
     List<ArticleDTO> findAllPublic();
     ArticleDTO findById(Long id);
     List<ArticleDTO> findByCurrentUser();
-    List<ArticleDTO> getByDomain(Long domainId);
+    //List<ArticleDTO> getByDomain(Long domainId);
+    Page<Article> getByDomain(Long domainId, Pageable pageable);
     void deleteById(Long id);
     void saveWithDocument(ArticleDTO article, MultipartFile file);
 }

@@ -28,7 +28,7 @@ iframe {
 
 .title-left {
     color: gray;
-    font-size: 300%;
+    font-size: 250%;
     font-weight: bold;
     float:left;
 }
@@ -77,3 +77,41 @@ img {
     width: 40%;
     float: left;
 }
+
+.domain-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    background-color: #f9f9f9;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    transition: background-color 0.3s ease;
+}
+
+.domain-entry:nth-child(odd) {
+    background-color: #efefef;
+}
+
+.domain-name {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.domain-name:hover {
+    color: #007acc;
+}
+
+.delete-icon a {
+    color: #cc0000;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.delete-icon a:hover {
+    color: #a00000;
+}
+

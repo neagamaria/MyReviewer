@@ -15,9 +15,8 @@
         <a href="#" th:href="@{'/domains/form'}" class="btn btn-light">Add new domain</a>
     </div>
     <br/>
-    <tr th:each="domain, stat : ${domains}"
-        th:class="${stat.odd}? 'table-light':''">
-        <a href="#" th:href="@{'/articles/domain/' + ${domain.id}}"><div class="title-left" th:text="${domain.name}"></div></a>
+    <tr th:each="domain, stat : ${domains}" class="domain-entry">
+        <a href="#" th:href="@{'/articles/domain/' + ${domain.id}}"><div class="domain-name" th:text="${domain.name}"></div></a>
         <br/>
         <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
             <td class="float-right"><a href="#" th:href="@{'/domains/delete/' + ${domain.id}}"><i class="fa-solid fa-trash"></i></a></td>

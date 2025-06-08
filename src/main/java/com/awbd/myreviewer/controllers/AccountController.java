@@ -80,10 +80,12 @@ public class AccountController {
         return "redirect:/";
     }
 
-    @GetMapping("/{id}")
-    public String showAccount(Model model, @PathVariable String id) {
+    @GetMapping("/myaccount")
+    public String showAccount(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
         model.addAttribute("account",
-                accountService.findById(Long.valueOf(id)));
+                accountService.findByName(auth.getName()));
 
         return "/accountInfo";
     }

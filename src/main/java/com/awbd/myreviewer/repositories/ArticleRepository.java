@@ -1,13 +1,13 @@
 package com.awbd.myreviewer.repositories;
 
 import com.awbd.myreviewer.domain.Article;
-import org.hibernate.query.Page;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,5 +24,5 @@ public interface ArticleRepository extends CrudRepository<Article, Long>, Paging
     List<Article> findByWriter(@Param("writerId") Long writerId);
 
     @Query("SELECT a FROM Article a JOIN a.domains d WHERE d.id = :domainId")
-    List<Article> findByDomain(@Param("domainId") Long domainId);
+    Page<Article> findByDomain(@Param("domainId") Long domainId, Pageable pageable);
 }

@@ -2,12 +2,15 @@ package com.awbd.myreviewer.services;
 
 import com.awbd.myreviewer.domain.Article;
 import com.awbd.myreviewer.domain.Account;
+import com.awbd.myreviewer.domain.Domain;
 import com.awbd.myreviewer.dtos.ArticleDTO;
+import com.awbd.myreviewer.dtos.DomainDTO;
 import com.awbd.myreviewer.exceptions.ResourceNotFoundException;
 import com.awbd.myreviewer.repositories.AccountRepository;
 import com.awbd.myreviewer.repositories.ArticleRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -107,6 +110,14 @@ public class ArticleServiceImpl implements ArticleService {
                 // set the current date
                 article.setPostedDate(new Date());
 
+                // save the link to domains
+                List<Domain> domains = article.getDomains();
+                if(!domains.isEmpty()) {
+                    for(Domain domain: domains) {
+                        domain.getArticles().add(article);
+                    }
+                }
+
                 articleRepository.save(article);
             }
         } catch (IOException e) {
@@ -127,13 +138,9 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<ArticleDTO> getByDomain(Long domainId) {
-        List<Article> articles = new LinkedList<>();
-        articleRepository.findByDomain(domainId).iterator().forEachRemaining(articles::add);
-
-        return articles.stream()
-                .map(article -> modelMapper.map(article, ArticleDTO.class))
-                .collect(Collectors.toList());
+    public Page<Article> getByDomain(Long domainId, Pageable pageable) {
+        System.out.println(articleRepository.findByDomain(domainId, pageable));
+        return articleRepository.findByDomain(domainId, pageable);
     }
 }
 

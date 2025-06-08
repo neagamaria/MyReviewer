@@ -20,4 +20,55 @@ button {
     padding: 1%;
 }
 
+.container {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    font-size: 250%;
+    font-weight: bold;
+    opacity: 80%;
+    color: #20b899;
+}
+
+.desc {
+    font-size: 100%;
+    font-style: oblique;
+    opacity: 50%;
+    color: gray;
+    padding: 2%;
+}
+
+.icons {
+    display: grid;
+    padding-top: 3%;
+    font-size: 180%;
+    padding-left: 4%;
+}
+
+.button-container {
+    text-align: center;
+    background-color: #dcdcdc;
+    padding: 60px 80px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.button-container a {
+    background-color: #888;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    margin: 10px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button-container button:hover {
+    background-color: #666;
+}
 
