@@ -51,19 +51,17 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Page<Article> findAll(Pageable pageable) {
-        return articleRepository.findAll(pageable);
+       return articleRepository.findAll(pageable);
     }
 
     @Override
-    public List<ArticleDTO> findAllPublic() {
-        List<Article> publicArticles = articleRepository.getALLPublic();
+    public Page<Article> findAllPublic(Pageable pageable) {
+        Page<Article> publicArticles = articleRepository.getALLPublic(pageable);
 
         if (publicArticles.isEmpty()) {
             throw new RuntimeException("Article not found!");
         }
-        return publicArticles.stream()
-                .map(article -> modelMapper.map(article, ArticleDTO.class))
-                .collect(Collectors.toList());
+        return publicArticles;
     }
 
 
@@ -139,7 +137,6 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Page<Article> getByDomain(Long domainId, Pageable pageable) {
-        System.out.println(articleRepository.findByDomain(domainId, pageable));
         return articleRepository.findByDomain(domainId, pageable);
     }
 }

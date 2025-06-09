@@ -1,6 +1,7 @@
 package com.awbd.myreviewer.controllers;
 
 import com.awbd.myreviewer.exceptions.ResourceNotFoundException;
+import com.awbd.myreviewer.exceptions.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,6 +17,15 @@ public class GlobalExceptionHandler {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.getModel().put("exception", exception);
         modelAndView.setViewName("notFoundException");
+        return modelAndView;
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(UnauthorizedException.class)
+    public ModelAndView handlerUnauthorizedException(Exception exception) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.getModel().put("exception", exception);
+        modelAndView.setViewName("unauthorizedException");
         return modelAndView;
     }
 }

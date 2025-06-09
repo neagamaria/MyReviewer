@@ -33,6 +33,14 @@ iframe {
     float:left;
 }
 
+.page-title {
+    font-size: 150%;
+    font-weight: bold;
+    opacity: 80%;
+    color: #20b899;
+    text-align: center;
+}
+
 .float-right{
     float:right;
 }
@@ -78,40 +86,27 @@ img {
     float: left;
 }
 
-.domain-entry {
+.flex-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 14px 18px;
-    background-color: #f9f9f9;
-    margin-bottom: 12px;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    transition: background-color 0.3s ease;
+    height: 50vh;
 }
 
-.domain-entry:nth-child(odd) {
-    background-color: #efefef;
+.domains-container {
+    border-radius: 3px;
+    color: black;
+    width: 600px;
+    height: 200px;
+    border: 1px solid lightgray;
+    margin: 10px;
+    padding: 10px;
+    overflow-y: scroll;
+    background-color: #f3f3f4;
 }
 
-.domain-name {
-    text-decoration: none;
-    color: #333;
-    font-size: 16px;
-    font-weight: 500;
+.domains-content {
+    width: 500px;
+    height: 300px;
+    padding: 20px;
 }
-
-.domain-name:hover {
-    color: #007acc;
-}
-
-.delete-icon a {
-    color: #cc0000;
-    font-size: 16px;
-    text-decoration: none;
-}
-
-.delete-icon a:hover {
-    color: #a00000;
-}
-

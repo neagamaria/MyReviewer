@@ -51,8 +51,8 @@
             <br/>
             <iframe th:src="@{'/articles/' + ${article.document}}" type="application/pdf" width="50%" height="200px"></iframe>
             <br/>
-            <a class="link-underline-success" th:href="@{'/getDocument/' + ${article.id}}" download>Download document</a>
-            <br/>
+<!--            <a class="link-underline-success" th:href="@{'/getDocument/' + ${article.id}}" download>Download document</a>-->
+<!--            <br/>-->
             <div th:class="float-left"><a href="#" th:href="@{'/articles/' + ${article.id} + '/reviewList'}">Reviews</a>&nbsp;&nbsp;</div>
             <div th:class="float-left" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')') || #authorization.expression('hasRole(''ROLE_REVIEWER'')')}">
                 <div th:class="review"><a href="#" th:href="@{'/articles/' + ${article.id} + '/reviews/form'}"><i class="fa-solid fa-comment-dots"></i></a></div>

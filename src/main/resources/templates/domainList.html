@@ -9,19 +9,24 @@
         <link rel="stylesheet" th:href="@{/css/articles.css}" />
     </head>
     <body>
-    <div th:replace="menu :: menu"></div>
-    <br/>
-    <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
-        <a href="#" th:href="@{'/domains/form'}" class="btn btn-light">Add new domain</a>
-    </div>
-    <br/>
-    <tr th:each="domain, stat : ${domains}" class="domain-entry">
-        <a href="#" th:href="@{'/articles/domain/' + ${domain.id}}"><div class="domain-name" th:text="${domain.name}"></div></a>
+        <div th:replace="menu :: menu"></div>
         <br/>
-        <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
-            <td class="float-right"><a href="#" th:href="@{'/domains/delete/' + ${domain.id}}"><i class="fa-solid fa-trash"></i></a></td>
+        <div class="float-right" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+            <a href="#" th:href="@{'/domains/form'}" class="btn btn-light">Add new domain</a>
         </div>
-        <br/>
-    </tr>
+        <div class="clear-both"></div>
+        <div class="page-title">List of academic domains</div>
+        <div class="flex-container">
+            <div class="domains-container">
+                <tr th:each="domain, stat : ${domains}" class="domains-content">
+                    <a href="#" th:href="@{'/articles/domain/' + ${domain.id}}"><div class="domain-name" th:text="${domain.name}"></div></a>
+                    <br/>
+                    <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                        <td class="float-right"><a href="#" th:href="@{'/domains/delete/' + ${domain.id}}"><i class="fa-solid fa-trash"></i></a></td>
+                    </div>
+                    <br/>
+                </tr>
+            </div>
+        </div>
     </body>
 </html>
