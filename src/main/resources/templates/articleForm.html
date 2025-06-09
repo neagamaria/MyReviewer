@@ -13,6 +13,8 @@
     <body>
         <div th:replace="menu :: menu"></div>
         <br/>
+        <div class="page-title">Post an article</div>
+
         <div class="container">
             <form enctype="multipart/form-data" method="post" th:action="@{/articles/save}" th:object="${article}">
                 <input th:field="*{id}" type="hidden"/>
@@ -38,7 +40,7 @@
                     <option value="public">public</option>
                     <option value="private">private</option>
                 </select>
-
+                <br/>
                 <label>Domains:</label>
                 <div th:each="domain : ${domains}">
                     <input type="checkbox" th:value="${domain.id}" th:field="*{domains}" />

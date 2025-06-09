@@ -6,6 +6,7 @@ import com.awbd.myreviewer.domain.Review;
 import com.awbd.myreviewer.dtos.ArticleDTO;
 import com.awbd.myreviewer.dtos.DomainDTO;
 import com.awbd.myreviewer.dtos.ReviewDTO;
+import com.awbd.myreviewer.exceptions.UnauthorizedException;
 import com.awbd.myreviewer.services.ArticleService;
 import com.awbd.myreviewer.services.DomainService;
 import com.awbd.myreviewer.services.ReviewService;
@@ -23,6 +24,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -74,7 +77,7 @@ public class ArticleController {
         Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        Page<Article> articles = articleService.findAll(pageable);
+        Page<Article> articles = articleService.findAllPublic(pageable);
 
         // calculate grades for star system
         List<Integer> stars = new ArrayList<Integer>();
@@ -164,6 +167,12 @@ public class ArticleController {
     // form to add an article
     @GetMapping("/form")
     public String articleForm(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(!Objects.equals(auth.getAuthorities().iterator().next().getAuthority(), "ROLE_WRITER") ||
+                !Objects.equals(auth.getAuthorities().iterator().next().getAuthority(), "ROLE_ADMIN")) {
+            throw new UnauthorizedException("Missing authorizations.");
+        }
+
         ArticleDTO article = new ArticleDTO();
         model.addAttribute("article", article);
         List<DomainDTO> allDomains = domainService.findAll();
@@ -194,13 +203,21 @@ public class ArticleController {
     // edit an article
     @RequestMapping("/edit/{id}")
     public String edit(Model model, @PathVariable String id) {
-        model.addAttribute("article",
-                articleService.findById(Long.valueOf(id)));
+        ArticleDTO article = articleService.findById(Long.valueOf(id));
 
-        List<DomainDTO> categoriesAll = domainService.findAll();
-        model.addAttribute("categoriesAll", categoriesAll );
+        if(article == null) {
+            logger.warn("LOG ERR: article not existent");
+            return "notFoundException";
+        }
+        else {
+            model.addAttribute("article", article);
 
-        return "articleForm";
+            List<DomainDTO> categoriesAll = domainService.findAll();
+            model.addAttribute("categoriesAll", categoriesAll );
+            return "articleForm";
+        }
+
+
     }
 
 
@@ -231,6 +248,12 @@ public class ArticleController {
     // form to add a review
     @GetMapping("/{articleId}/reviews/form")
     public String reviewForm(@PathVariable Long articleId, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(!Objects.equals(auth.getAuthorities().iterator().next().getAuthority(), "ROLE_REVIEWER") ||
+                !Objects.equals(auth.getAuthorities().iterator().next().getAuthority(), "ROLE_ADMIN")) {
+            throw new UnauthorizedException("Missing authorizations.");
+        }
+
         ReviewDTO review = new ReviewDTO();
         model.addAttribute("articleId", articleId);
         model.addAttribute("review", review);
@@ -269,6 +292,7 @@ public class ArticleController {
         String currentVisibility = article.getVisibility();
         if(Objects.equals(currentVisibility, "public")) {
             article.setVisibility("private");
+            System.out.println(article.getVisibility());
         }
         else {
             article.setVisibility("public");

@@ -11,7 +11,7 @@ import java.util.List;
 public interface ArticleService {
     List<ArticleDTO> findAll();
     Page<Article> findAll(Pageable pageable);
-    List<ArticleDTO> findAllPublic();
+    Page<Article> findAllPublic(Pageable pageable);
     ArticleDTO findById(Long id);
     List<ArticleDTO> findByCurrentUser();
     //List<ArticleDTO> getByDomain(Long domainId);

@@ -16,7 +16,8 @@ public interface ArticleRepository extends CrudRepository<Article, Long>, Paging
     Optional<Article> findById(Long id);
     Optional<Article> findByName(String name);
     @Query("select a from Article a where a.visibility = 'public'")
-    List<Article> getALLPublic();
+    Page<Article> getALLPublic(Pageable pageable);
+
     @Query("select a from Article a where a.writer.name = :name")
     List<Article> findByWriterName(@Param("name") String writerName);
 
