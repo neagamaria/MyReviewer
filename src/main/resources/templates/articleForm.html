@@ -19,7 +19,8 @@
             <form enctype="multipart/form-data" method="post" th:action="@{/articles/save}" th:object="${article}">
                 <input th:field="*{id}" type="hidden"/>
                 <label>Name:</label>
-                <input type="text" th:field="*{name}" required/>
+                <input type="text" th:field="*{name}"/>
+                <p class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
                 <br/>
 
                 <label>Description:</label>
@@ -40,9 +41,10 @@
                     <option value="public">public</option>
                     <option value="private">private</option>
                 </select>
+                <p class="text-danger" th:if="${#fields.hasErrors('visibility')}" th:errors="*{visibility}"></p>
                 <br/>
-                <label>Domains:</label>
-                <div th:each="domain : ${domains}">
+                <label th:for="domains">Domains:</label>
+                <div th:each="domain : ${domainsAll}">
                     <input type="checkbox" th:value="${domain.id}" th:field="*{domains}" />
                     <span th:text="${domain.name}"></span>
                 </div>
@@ -50,6 +52,7 @@
 
                 <label>Upload Document:</label>
                 <input type="file" name="documentFile"/>
+                <p class="text-danger" th:if="${#fields.hasErrors('document')}" th:errors="*{document}"></p>
                 <br/>
 
                 <button type="submit">Save</button>

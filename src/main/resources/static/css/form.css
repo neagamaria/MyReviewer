@@ -1,3 +1,20 @@
+.container-colored {
+    background-color: #f6f4f5;
+    border-bottom-color: cadetblue;
+}
+
+button {
+    background-color: #20b899;
+}
+
+.fa-solid {
+    color: grey;
+}
+
+iframe {
+    border: 2px solid gray;
+}
+
 .container {
     display: flex;
     justify-content: center;

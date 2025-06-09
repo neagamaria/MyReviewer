@@ -79,7 +79,22 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public void deleteById(Long id) {
 
-        articleRepository.deleteById(id);
+        Optional<Article> optionalArticle = articleRepository.findById(id);
+
+        if (optionalArticle.isPresent()) {
+            Article article = optionalArticle.get();
+
+            // Remove this article from each associated domain
+            if (article.getDomains() != null) {
+                for (Domain domain : article.getDomains()) {
+                    domain.getArticles().remove(article);
+                }
+                article.getDomains().clear(); // Remove all domain associations from article
+            }
+
+            articleRepository.save(article); // Persist the relationship removal
+            articleRepository.deleteById(id);
+        }
     }
 
 

@@ -17,10 +17,12 @@
         <div class="container">
             <form enctype="multipart/form-data" method="post" th:action="@{/articles/{id}/review(id=${articleId})}" th:object="${review}">
                 <label>Grade:</label>
-                <input type="text" th:field="*{grade}" required/>
+                <input type="text" th:field="*{grade}"/>
+                <p class="text-danger" th:if="${#fields.hasErrors('grade')}" th:errors="*{grade}"></p>
                 <br/>
                 <label>Feedback:</label>
                 <textarea type="text" th:field="*{feedback}" rows="5" cols="50"></textarea>
+                <p class="text-danger" th:if="${#fields.hasErrors('feedback')}" th:errors="*{feedback}"></p>
                 </br>
 
                 <button type="submit">Submit</button>

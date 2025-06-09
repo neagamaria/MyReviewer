@@ -1,6 +1,7 @@
 package com.awbd.myreviewer.controllers;
 
 import com.awbd.myreviewer.domain.Article;
+import com.awbd.myreviewer.domain.Domain;
 import com.awbd.myreviewer.domain.Level;
 import com.awbd.myreviewer.domain.Review;
 import com.awbd.myreviewer.dtos.ArticleDTO;
@@ -10,8 +11,8 @@ import com.awbd.myreviewer.exceptions.UnauthorizedException;
 import com.awbd.myreviewer.services.ArticleService;
 import com.awbd.myreviewer.services.DomainService;
 import com.awbd.myreviewer.services.ReviewService;
-import jakarta.validation.Valid;
 
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -168,8 +169,8 @@ public class ArticleController {
     @GetMapping("/form")
     public String articleForm(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(!Objects.equals(auth.getAuthorities().iterator().next().getAuthority(), "ROLE_WRITER") ||
-                !Objects.equals(auth.getAuthorities().iterator().next().getAuthority(), "ROLE_ADMIN")) {
+        System.out.println(auth.getAuthorities().iterator().next().getAuthority());
+        if(Objects.equals(auth.getAuthorities().iterator().next().getAuthority(), "ROLE_REVIEWER")) {
             throw new UnauthorizedException("Missing authorizations.");
         }
 
@@ -177,7 +178,7 @@ public class ArticleController {
         model.addAttribute("article", article);
         List<DomainDTO> allDomains = domainService.findAll();
 
-        model.addAttribute("domains", allDomains);
+        model.addAttribute("domainsAll", allDomains);
         model.addAttribute("levels", Level.values());
 
         return "articleForm";
@@ -186,15 +187,22 @@ public class ArticleController {
     // save article
     @PostMapping("/save")
     public String saveArticle(@Valid @ModelAttribute("article") ArticleDTO article, BindingResult bindingResult,
-                              @RequestParam("documentFile") MultipartFile file) {
-
-        if(!file.isEmpty()) {
-            articleService.saveWithDocument(article, file);
-        }
+                              @RequestParam("documentFile") MultipartFile file, Model model) {
 
         if (bindingResult.hasErrors()) {
-            logger.warn("LOG WARN: wrong form completion");
+
+            List<DomainDTO> allDomains = domainService.findAll();
+            model.addAttribute("domainsAll", allDomains);
+            model.addAttribute("levels", Level.values());
+
             return "articleForm";
+        }
+
+        if(file.isEmpty()) {
+            bindingResult.rejectValue("document", "NotBlank", "Document is required");
+        }
+       else {
+            articleService.saveWithDocument(article, file);
         }
 
         return "redirect:/articles";
@@ -212,12 +220,13 @@ public class ArticleController {
         else {
             model.addAttribute("article", article);
 
-            List<DomainDTO> categoriesAll = domainService.findAll();
-            model.addAttribute("categoriesAll", categoriesAll );
+              List<DomainDTO> domains = domainService.findAll();
+              System.out.println(domains);
+              model.addAttribute("domainsAll", domains);
+              model.addAttribute("levels", Level.values());
+
             return "articleForm";
         }
-
-
     }
 
 
@@ -249,8 +258,8 @@ public class ArticleController {
     @GetMapping("/{articleId}/reviews/form")
     public String reviewForm(@PathVariable Long articleId, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(!Objects.equals(auth.getAuthorities().iterator().next().getAuthority(), "ROLE_REVIEWER") ||
-                !Objects.equals(auth.getAuthorities().iterator().next().getAuthority(), "ROLE_ADMIN")) {
+        System.out.println(auth.getAuthorities().iterator().next().getAuthority());
+        if(Objects.equals(auth.getAuthorities().iterator().next().getAuthority(), "ROLE_WRITER")) {
             throw new UnauthorizedException("Missing authorizations.");
         }
 
@@ -264,10 +273,12 @@ public class ArticleController {
 
     // add a review to article
     @PostMapping("/{articleId}/review")
-    public String addReviewToArticle(@Valid @ModelAttribute ReviewDTO review, BindingResult bindingResult, @PathVariable Long articleId) {
+    public String addReviewToArticle(@Valid @ModelAttribute("review") ReviewDTO review, BindingResult bindingResult, @PathVariable Long articleId, Model model) {
 
         if(bindingResult.hasErrors()) {
             logger.warn("LOG WARN: wrong form completion");
+            model.addAttribute("review", review);
+            model.addAttribute("articleId", articleId);
             return "reviewForm";
         }
         ArticleDTO article = articleService.findById(articleId);
@@ -275,6 +286,7 @@ public class ArticleController {
 
         return "redirect:/articles";
     }
+
 
     // get reviews for article
     @RequestMapping("/{articleId}/reviewList")
