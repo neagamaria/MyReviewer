@@ -1,14 +1,12 @@
 package com.awbd.myreviewer.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 
 public class DomainDTO {
     private Long id;

@@ -14,7 +14,8 @@
     <div class="container">
         <form enctype="multipart/form-data" method="post" th:action="@{/domains/save}" th:object="${domain}">
             <label>Name:</label>
-            <input type="text" th:field="*{name}" required/>
+            <input type="text" th:field="*{name}"/>
+            <p class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
             <br/>
 
             <button type="submit">Save</button>
